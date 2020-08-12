@@ -2,6 +2,7 @@ import sys
 import codecs
 from textblob import TextBlob
 from mafan import simplify
+import pdb
 
 MIN_SUP = 100
 MIN_PERCENT = 100
@@ -40,13 +41,14 @@ def Load(filename, stopwords, output_filename):
         tokens = line.strip().split('\t')
         valid = False
         for token in tokens[2:]:
-            support = int(token.split(':')[-2])
-            percentage = float(token.split(':')[-1][:-1])
-            if (percentage >= MIN_PERCENT) or (support >= MIN_SUP):
-                name = ':'.join(token.split(':')[:-2])
-                valid = True
-                if NoSeparator(name) and StopWordChecking(name, stopwords):
-                    candidate.add(name.lower())
+            if ':' in token:
+                support = int(token.split(':')[-2])
+                percentage = float(token.split(':')[-1][:-1])
+                if (percentage >= MIN_PERCENT) or (support >= MIN_SUP):
+                    name = ':'.join(token.split(':')[:-2])
+                    valid = True
+                    if NoSeparator(name) and StopWordChecking(name, stopwords):
+                        candidate.add(name.lower())
         if valid:
             name = tokens[0]
             if NoSeparator(name) and StopWordChecking(name, stopwords):
@@ -85,7 +87,7 @@ def main(argv):
 
     INPUT_FILENAME = 'data/' + LANGUAGE.upper() + '/entities'
     STOPWORDS = 'data/' + LANGUAGE.upper() + '/stopwords.txt'
-    OUTPUT_FILENAME = 'data/' + LANGUAGE.upped() + '/wiki_quality.txt'
+    OUTPUT_FILENAME = 'data/' + LANGUAGE.upper() + '/wiki_quality.txt'
 
     stopwords = LoadStopWords(STOPWORDS)
     Load(INPUT_FILENAME, stopwords, OUTPUT_FILENAME)

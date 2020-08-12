@@ -2,6 +2,7 @@ import sys
 import codecs
 from mafan import simplify, split_text
 from textblob import TextBlob
+import pdb
 
 LANGUAGE = 'en'
 
@@ -21,12 +22,12 @@ def Load(filename, output_filename):
         if LANGUAGE == 'zh':
             name = simplify(''.join(name.split()))
 
-        candidate.add(name.lower())
+        #candidate.add(name.lower())
     print len(candidate)
     
     out = codecs.open(output_filename, 'w', 'utf-8')
     for name in candidate:
-        out.write(name + '\n')
+        if ':' in name: out.write(name.split(':')[1] + '\n')
     out.close()
     
 def main(argv):
